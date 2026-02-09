@@ -1,0 +1,92 @@
+# 联赛配置（第三版多联赛 + 第四版多维度参考）
+# understat_code：Understat；fbref_*：FBref；fotmob_league_id：soccerdata FotMob（免费库）
+
+leagues:
+  - id: EPL
+    name_zh: 英超
+    name_en: English Premier League
+    understat_code: EPL
+    fbref_comp_id: 9
+    fbref_slug: Premier-League
+    fotmob_league_id: ENG-Premier League
+
+  - id: La_Liga
+    name_zh: 西甲
+    name_en: La Liga
+    understat_code: La_Liga
+    fbref_comp_id: 12
+    fbref_slug: La-Liga
+    fotmob_league_id: ESP-La Liga
+
+  - id: Bundesliga
+    name_zh: 德甲
+    name_en: Bundesliga
+    understat_code: Bundesliga
+    fbref_comp_id: 20
+    fbref_slug: Bundesliga
+    fotmob_league_id: GER-Bundesliga
+
+  - id: Serie_A
+    name_zh: 意甲
+    name_en: Serie A
+    understat_code: Serie_A
+    fbref_comp_id: 11
+    fbref_slug: Serie-A
+    fotmob_league_id: ITA-Serie A
+
+  - id: Ligue_1
+    name_zh: 法甲
+    name_en: Ligue 1
+    understat_code: Ligue_1
+    fbref_comp_id: 13
+    fbref_slug: Ligue-1
+    fotmob_league_id: FRA-Ligue 1
+
+  # 五大联赛合并（用于统一校准，数据由 scripts/merge_five_leagues.py 生成）
+  - id: Combined
+    name_zh: 五大联赛合并
+    name_en: Top 5 Leagues Combined
+    understat_code: null
+    fbref_comp_id: null
+    fbref_slug: null
+    fotmob_league_id: null
+
+  - id: Championship
+    name_zh: 英冠
+    name_en: EFL Championship
+    understat_code: null
+    fbref_comp_id: 10
+    fbref_slug: Championship
+    fotmob_league_id: ENG-Championship
+
+  - id: Saudi_Pro
+    name_zh: 沙特联
+    name_en: Saudi Pro League
+    understat_code: null
+    fbref_comp_id: null
+    fbref_slug: null
+    fotmob_league_id: null
+
+  - id: Bundesliga_2
+    name_zh: 德乙
+    name_en: 2. Bundesliga
+    understat_code: null
+    fbref_comp_id: null
+    fbref_slug: null
+    fotmob_league_id: null
+
+  - id: Ligue_2
+    name_zh: 法乙
+    name_en: Ligue 2
+    understat_code: null
+    fbref_comp_id: null
+    fbref_slug: null
+    fotmob_league_id: null
+
+  - id: Eredivisie
+    name_zh: 荷甲
+    name_en: Eredivisie
+    understat_code: null
+    fbref_comp_id: null
+    fbref_slug: null
+    fotmob_league_id: null

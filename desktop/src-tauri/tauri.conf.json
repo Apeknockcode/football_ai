@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schema.tauri.app/v2/tauri.conf.json",
+  "productName": "Football AI",
+  "version": "0.1.0",
+  "identifier": "com.football-ai.desktop",
+  "build": {
+    "beforeDevCommand": "",
+    "devUrl": null,
+    "beforeBuildCommand": "",
+    "frontendDist": "../"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "Football AI · 足球分析",
+        "width": 960,
+        "height": 720,
+        "minWidth": 640,
+        "minHeight": 480
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [],
+    "macOS": {
+      "minimumSystemVersion": "10.15"
+    },
+    "shortDescription": "足球分析桌面版",
+    "longDescription": "Football AI 本地桌面应用，调用 Python 后端做今日预测与赛前/赛后报告。",
+    "resources": []
+  },
+  "plugins": {}
+}

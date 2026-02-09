@@ -1,0 +1,38 @@
+# 核心：数据处理与数值
+pandas>=2.0.0
+numpy>=1.24.0
+
+# 配置
+pyyaml>=6.0
+
+# 可选：StatsBomb / 事件数据（按需启用）
+# statsbombpy>=0.1.0
+# kloppy>=3.0.0
+
+# 可选：LLM 润色报告（按需启用）
+# openai>=1.0.0
+# httpx>=0.25.0
+
+# 可选：拉取盘口（scripts/fetch_odds.py）HTTPS 请求用，避免 macOS 证书验证失败
+certifi>=2024.0.0
+
+# 可选：从 Understat 抓取历史赛果（scripts/fetch_historical_understat.py）
+# understatapi>=0.7.0
+
+# 可选：从 FBref 抓取杯赛历史（scripts/fetch_historical_fbref_cups.py 用 bs4 解析 HTML）
+beautifulsoup4>=4.12.0
+
+# 可选：今日比赛图片识别（scripts/parse_injury_images.py、桌面端「保存图片并识别」）
+easyocr>=1.7.0
+
+# 第四版多源：现成免费库抓取 FotMob/Sofascore（scripts/fetch_historical_soccerdata.py）
+soccerdata>=1.8.0
+
+# 可选：ML 训练与预测（scripts/train_ml.py、football_ai/predictions/ml_predictor.py）
+scikit-learn>=1.2.0
+xgboost>=2.0.0
+# lightgbm>=4.0.0
+
+# 开发与测试
+pytest>=7.0.0
+pytest-cov>=4.0.0

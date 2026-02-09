@@ -1,0 +1,2 @@
+在此填写你的 The Odds API Key（一行，无引号）
+然后另存为 odds_api_key.txt，勿提交到 Git

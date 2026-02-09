@@ -1,0 +1,51 @@
+# 第一版：英超、仅中文。详见 docs/产品与分析规格-第一版.md
+
+league:
+  id: premier_league
+  name_zh: 英超
+  name_en: English Premier League
+
+# 数据源（可扩展为多源）
+data:
+  events:
+    provider: statsbomb   # 第二版: statsbomb，英超 2024/25 文件
+    path: null            # 本地 StatsBomb 单场 JSON 路径
+    team_mapping_path: null  # 可选: CSV 两列 statsbomb_name, report_name
+  injuries:
+    source: wechat       # 当前: 公众号等非结构化；预留 api
+    api_url: null
+  fixtures:
+    path: null           # 赛程/元数据 CSV 或 API
+
+# 政治 · 信源（英超以国外为主，可配置）
+politics:
+  narrative:
+    sources: [international]  # international | domestic | both
+  competition:
+    derby_rules_path: config/derby_rules.csv   # 德比等规则表（可空）
+
+# 报告
+report:
+  language: zh
+  versions: [full, summary]   # full=分析师, summary=球迷
+  llm:
+    enabled: false
+    provider: null           # openai 等，按需配置；启用时需设置 OPENAI_API_KEY 或 api_key
+    api_key: null            # 可选，不填则从环境变量 OPENAI_API_KEY 读取
+    model: gpt-4o-mini       # 可选，润色用模型
+
+# 预测 · 伤停对预期 xG 的微调（赛前有伤停名单时扣减）
+predictions:
+  injury_xg_adjust:
+    deduct_injured: 0.06     # 受伤/停赛/其他原因 每人次
+    deduct_doubtful: 0.03    # 出战成疑 每人次
+    max_deduct_per_team: 0.25
+    min_xg_after_injury: 0.25
+  # 价值方向：模型概率 − 赔率隐含概率 > value_threshold 时标记为潜在价值方向（仅信息展示，不构成投注建议）
+  value_threshold: 0.05
+  # 融合预测（--model ensemble）：胜负平概率 = (1 - ensemble_ml_weight) * Poisson + ensemble_ml_weight * ML，再归一化；比分/让球仍用 Poisson
+  ensemble_ml_weight: 0.5
+  # 盘口参考：当赛程 CSV 有主胜/平/客胜赔率时，最终胜负平概率 = (1 - odds_blend_weight) * 模型概率 + odds_blend_weight * 赔率隐含概率（归一化）。0=不参考，0.2=20% 盘口
+  odds_blend_weight: 0.2
+  # ML 由胜负平推算让球时，「主胜中一球小胜」与「客胜中主队输一球」占比（无真实比分分布时的近似），可调 0.5～0.6
+  win_by_one_ratio: 0.55

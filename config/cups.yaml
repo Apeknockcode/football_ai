@@ -1,0 +1,42 @@
+# 杯赛配置（第三版 · 阶段二）
+# 淘汰赛、主客两回合、点球等赛制与展示；数据可手工维护或通过 FBref 抓取
+
+cups:
+  - id: FA_Cup
+    name_zh: 足总杯
+    name_en: FA Cup
+    two_legged: false
+    fbref_comp_id: 514      # FBref 赛事 id，用于 scripts/fetch_historical_fbref_cups.py
+    fbref_slug: FA-Cup     # URL 片段，如 2024-2025-FA-Cup-Scores-and-Fixtures
+
+  - id: UCL
+    name_zh: 欧冠
+    name_en: UEFA Champions League
+    two_legged: true
+    fbref_comp_id: 8
+    fbref_slug: Champions-League
+    stage_labels:          # 轮次 -> 展示文案（可选）
+      1: 小组赛第1轮
+      2: 小组赛第2轮
+      3: 小组赛第3轮
+      4: 小组赛第4轮
+      5: 小组赛第5轮
+      6: 小组赛第6轮
+      7: 1/8决赛
+      8: 1/4决赛
+      9: 半决赛
+      10: 决赛
+
+  - id: UEL
+    name_zh: 欧联
+    name_en: UEFA Europa League
+    two_legged: true
+    fbref_comp_id: 19
+    fbref_slug: Europa-League
+
+  - id: League_Cup
+    name_zh: 联赛杯
+    name_en: EFL League Cup
+    two_legged: false
+    fbref_comp_id: 690
+    fbref_slug: EFL-Cup

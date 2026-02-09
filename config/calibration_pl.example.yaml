@@ -1,0 +1,10 @@
+# 英超校准参数（由 scripts/calibrate_pl.py 根据 data/historical/*.csv 生成）
+# 复制为 calibration_pl.yaml 后，预测服务将自动使用
+
+league: premier_league
+# 历史平局占比（用于报告/回测参考；可选用于概率后处理）
+draw_rate: 0.25
+# 主队 xG 乘数（>1 表示主队优势）
+home_xg_factor: 1.0
+# xG 整体缩放（实际总进球 / 总 xG，使预测总进球更接近历史）
+xg_scale: 1.0

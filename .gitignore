@@ -1,0 +1,56 @@
+# 虚拟环境
+.venv/
+node_modules/
+
+# Tauri / Rust 编译产物（勿提交）
+desktop/src-tauri/target/
+.venv/.installed
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# 配置与密钥（勿提交敏感信息）
+.env
+*.local.yaml
+config/secrets*.yaml
+config/odds_api_key.txt
+# 校准参数由 scripts/calibrate_pl.py 按联赛生成，保留 config/calibration_*.example.yaml 即可
+config/calibration_EPL.yaml
+config/calibration_pl.yaml
+config/calibration_La_Liga.yaml
+config/calibration_Bundesliga.yaml
+config/calibration_Serie_A.yaml
+config/calibration_Ligue_1.yaml
+config/calibration_Championship.yaml
+config/calibration_FA_Cup.yaml
+config/calibration_UCL.yaml
+config/calibration_UEL.yaml
+config/calibration_League_Cup.yaml
+
+# 数据与缓存（按需保留）
+data/raw/
+data/processed/
+*.parquet
+*.csv
+!config/*.csv
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 测试与覆盖率
+.coverage
+htmlcov/
+.pytest_cache/
+
+# 报告输出（可改为不忽略，若需版本管理）
+# reports/

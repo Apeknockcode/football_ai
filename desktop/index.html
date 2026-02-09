@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Football AI · 足球分析</title>
+  <link rel="stylesheet" href="src/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-title">
+        <h1>Football AI</h1>
+        <span class="badge">足球分析</span>
+      </div>
+      <div class="header-path">
+        <input type="text" id="projectRoot" placeholder="项目根目录（可选）" />
+        <button type="button" id="btnSuggestRoot" class="btn-sm">使用建议路径</button>
+      </div>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button type="button" class="tab" data-tab="pre" role="tab">赛前报告</button>
+      <button type="button" class="tab active" data-tab="predict" role="tab">今日预测</button>
+      <button type="button" class="tab" data-tab="results" role="tab">预测结果</button>
+      <button type="button" class="tab" data-tab="post" role="tab">赛后报告</button>
+      <button type="button" class="tab" data-tab="settings" role="tab">设置</button>
+    </nav>
+
+    <main class="content">
+      <!-- 赛前报告：表格输入多场，逐个生成 -->
+      <section id="panel-pre" class="panel" role="tabpanel">
+        <div class="form-card">
+          <div class="table-toolbar">
+            <button type="button" id="btnPreAddRow" class="btn-sm">添加一场</button>
+            <button type="button" id="btnPreReport" class="btn-primary">逐个生成赛前报告</button>
+          </div>
+          <div class="table-scroll">
+            <table class="input-table" aria-label="赛前报告比赛列表">
+              <thead>
+                <tr>
+                  <th>主队</th>
+                  <th>客队</th>
+                  <th>轮次</th>
+                  <th>联赛</th>
+                  <th>赛季</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="preMatchesTbody">
+                <tr class="pre-match-row">
+                  <td><input type="text" class="pre-home" placeholder="主队" /></td>
+                  <td><input type="text" class="pre-away" placeholder="客队" /></td>
+                  <td><input type="number" class="pre-round" placeholder="轮次" min="1" /></td>
+                  <td>
+                    <select class="pre-league" aria-label="联赛">
+                      <option value="EPL">英超</option>
+                      <option value="La_Liga">西甲</option>
+                      <option value="Bundesliga">德甲</option>
+                      <option value="Serie_A">意甲</option>
+                      <option value="Ligue_1">法甲</option>
+                      <option value="Combined">合并</option>
+                    </select>
+                  </td>
+                  <td><input type="number" class="pre-season" placeholder="赛季" min="2020" max="2030" /></td>
+                  <td><button type="button" class="btn-remove-row" title="删除该行">删除</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div id="preReportLog" class="log-inline"></div>
+        <div id="preReportOut" class="report-out report-tables"></div>
+      </section>
+
+      <!-- 今日预测：表格输入多场 + 保留上传图片（默认页，有本地赛程则加载显示，仅点击「获取今日五大联赛」时拉取并覆盖） -->
+      <section id="panel-predict" class="panel active" role="tabpanel">
+        <div class="form-card">
+          <div class="table-toolbar">
+            <label>日期</label>
+            <input type="date" id="predictDate" />
+            <label>预测源</label>
+            <select id="predictModel" aria-label="预测源" title="Poisson / 融合会随预期 xG 表明显拉开概率；ML 依赖历史特征，对 xG 敏感度较低">
+              <option value="poisson">Poisson（随 xG 变化）</option>
+              <option value="ml">ML</option>
+              <option value="ensemble">融合 (Poisson+ML)</option>
+            </select>
+            <button type="button" id="btnFetchFixtures" class="btn-sm">获取今日五大联赛</button>
+            <button type="button" id="btnFetchOdds" class="btn-sm" title="需设置 THE_ODDS_API_KEY">拉取盘口</button>
+            <button type="button" id="btnPredictAddRow" class="btn-sm">添加一场</button>
+            <button type="button" id="btnPredict" class="btn-primary">运行预测</button>
+          </div>
+          <div class="table-scroll">
+            <table class="input-table" aria-label="今日预测比赛列表">
+              <thead>
+                <tr>
+                  <th>主队</th>
+                  <th>客队</th>
+                  <th>轮次</th>
+                  <th>联赛</th>
+                  <th>让球</th>
+                  <th>xG主</th>
+                  <th>xG客</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="predictMatchesTbody">
+                <tr class="predict-match-row">
+                  <td><input type="text" class="pred-home" placeholder="主队" /></td>
+                  <td><input type="text" class="pred-away" placeholder="客队" /></td>
+                  <td><input type="number" class="pred-round" placeholder="1" min="1" /></td>
+                  <td>
+                    <select class="pred-league" aria-label="联赛">
+                      <option value="EPL">英超</option>
+                      <option value="La_Liga">西甲</option>
+                      <option value="Bundesliga">德甲</option>
+                      <option value="Serie_A">意甲</option>
+                      <option value="Ligue_1">法甲</option>
+                      <option value="Combined">合并</option>
+                    </select>
+                  </td>
+                  <td><input type="text" class="pred-handicap" placeholder="-1/0/+1" /></td>
+                  <td><input type="text" class="pred-xg-home" placeholder="可选" /></td>
+                  <td><input type="text" class="pred-xg-away" placeholder="可选" /></td>
+                  <td><button type="button" class="btn-remove-row" title="删除该行">删除</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <details class="details-extra">
+            <summary>上传图片并识别（可选）</summary>
+            <div class="form-row">
+              <input type="file" id="matchListImage" accept="image/*" aria-label="比赛列表图片" />
+              <span id="matchListImageName" class="file-name"></span>
+            </div>
+            <div class="form-row">
+              <input type="file" id="injuryImage" accept="image/*" aria-label="伤停图片" />
+              <span id="injuryImageName" class="file-name"></span>
+            </div>
+            <button type="button" id="btnSaveAndOcr">保存图片并识别</button>
+          </details>
+        </div>
+        <div id="predictLog" class="log-inline"></div>
+      </section>
+
+      <!-- 预测结果 -->
+      <section id="panel-results" class="panel" role="tabpanel">
+        <div class="form-card">
+          <div class="form-row">
+            <label>日期</label>
+            <input type="date" id="viewDate" />
+            <button type="button" id="btnLoadPredictions" class="btn-primary">加载结果</button>
+          </div>
+        </div>
+        <div id="predictionsTableWrap" class="table-wrap"></div>
+      </section>
+
+      <!-- 赛后报告 -->
+      <section id="panel-post" class="panel" role="tabpanel">
+        <div class="form-card">
+          <div class="form-row">
+            <input type="text" id="postHome" placeholder="主队" />
+            <span class="form-vs">vs</span>
+            <input type="text" id="postAway" placeholder="客队" />
+          </div>
+          <div class="form-row">
+            <input type="number" id="postRound" placeholder="轮次" min="1" />
+            <button type="button" id="btnPostReport" class="btn-primary">生成赛后报告</button>
+          </div>
+        </div>
+        <div id="postReportLog" class="log-inline"></div>
+        <pre id="postReportOut" class="report-out"></pre>
+      </section>
+
+      <!-- 设置 -->
+      <section id="panel-settings" class="panel" role="tabpanel">
+        <div class="settings-block">
+          <h3>项目路径</h3>
+          <p class="hint">指向 football_ai 根目录，不填则用桌面应用上级目录。</p>
+          <div class="form-row">
+            <input type="text" id="projectRootSettings" placeholder="与顶部一致" />
+            <button type="button" id="btnSuggestRootSettings">使用建议路径</button>
+          </div>
+        </div>
+        <div class="settings-block">
+          <h3>历史数据</h3>
+          <div class="form-row">
+            <select id="settingsYear" aria-label="年份"></select>
+            <button type="button" id="btnFetchFive">拉取五大联赛</button>
+            <button type="button" id="btnMergeFive">合并五大联赛</button>
+          </div>
+        </div>
+        <div class="settings-block">
+          <h3>校准与回测</h3>
+          <div class="form-row">
+            <select id="settingsLeague" aria-label="联赛">
+              <option value="Combined">合并</option>
+              <option value="EPL">英超</option>
+              <option value="La_Liga">西甲</option>
+              <option value="Bundesliga">德甲</option>
+              <option value="Serie_A">意甲</option>
+              <option value="Ligue_1">法甲</option>
+            </select>
+            <button type="button" id="btnCalibrate">校准</button>
+            <button type="button" id="btnBacktest">回测</button>
+          </div>
+        </div>
+        <div class="settings-block">
+          <h3>数据校验</h3>
+          <p class="hint">默认：扫描各联赛无效场次；合并校验：核对 Combined 场次数/重复/轮次/比分。</p>
+          <div class="form-row">
+            <select id="settingsValidateMode" aria-label="校验类型">
+              <option value="">默认（无效场次）</option>
+              <option value="2024">2024 合并数据</option>
+              <option value="2025">2025 合并数据</option>
+              <option value="2026">2026 合并数据</option>
+            </select>
+            <label class="checkbox-inline"><input type="checkbox" id="settingsValidateRef" /> 与参考样本 diff</label>
+            <button type="button" id="btnValidateData">校验数据</button>
+          </div>
+        </div>
+        <div class="settings-block">
+          <h3>内置浏览器</h3>
+          <div class="form-row">
+            <input type="text" id="browserUrl" placeholder="https://understat.com/league/EPL/2025" />
+            <button type="button" id="btnOpenBrowser">打开</button>
+          </div>
+        </div>
+        <p class="result-label">执行结果 <button type="button" id="btnCopySettingsLog" class="btn-sm">复制</button></p>
+        <div id="settingsLog" class="log log-result log-scrollable"></div>
+        <details class="details-extra mt">
+          <summary>每日流程说明</summary>
+          <ol class="daily-list">
+            <li>赛前报告：填主客队、轮次、联赛与赛季，生成报告。</li>
+            <li>今日预测：整理 todays_matches.csv 后运行预测。</li>
+            <li>预测结果：选择日期加载 todays_predictions.csv。</li>
+            <li>可选：校准/回测、数据校验。</li>
+          </ol>
+        </details>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

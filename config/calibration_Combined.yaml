@@ -1,0 +1,6 @@
+# 五大联赛合并 校准参数（由 scripts/calibrate_pl.py 根据历史数据生成）
+league: Combined
+draw_rate: 0.2062
+home_xg_factor: 1.0000
+xg_scale: 1.0000
+# 基于场次: 4306
